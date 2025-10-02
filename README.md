@@ -5,5 +5,5 @@ Analyzes IEEE and ACM format bibliographies for correctness.  Only to be used as
 `python3 bibcheck.py filename.pdf ieee`
 
 ## Testing a PDF with ACM format bibliography
-`python3 bibcheck.py filename.pdf acm'
+`python3 bibcheck.py filename.pdf acm`
 

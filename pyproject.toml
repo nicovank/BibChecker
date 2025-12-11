@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bibcheck"
+version = "0.1.0"
+description = "A tool for checking the accuracy of citations within an ACM, SIAM, or IEEE formatted bibliography."
+authors = [
+    { name = "Amanda Bienz", email = "bienz@unm.edu" }
+]
+readme = "README.md"
+requires-python = ">=3.8"
+
+dependencies = [
+    "PyPDF2",
+    "requests",
+    "feedparser",
+    "python-Levenshtein",
+    "habanero",
+    "arxiv",
+]
+
+[project.scripts]
+bibcheck = "bibcheck.main:run"
+
+[project.urls]
+Homepage = "https://github.com/bienz2/BibChecker"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"bibcheck" = ["exclusions.json"]
+

@@ -4,7 +4,6 @@ import requests
 from urllib.parse import quote_plus
 import Levenshtein
 
-from datacite import DataCiteRESTClient
 from habanero import Crossref
 import arxiv
 import re

@@ -4,16 +4,31 @@ import unicodedata
 import string
 import os
 import html
+from pathlib import Path
 
-def load_source_patterns():
-    config_path = os.path.join(os.path.dirname(__file__), "exclusions.json")
+def load_json(path):
     try:
-        with open(config_path, "r", encoding="utf-8") as f:
+        with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
     except Exception as e:
-        print("Warning: Could not load exclusions.json:", e)
+        print(f"Warning: Could not load exclusions file {path}: {e}")
         return {}
+
+def load_source_patterns(extra_files=None):
+    package_dir = Path(__file__).resolve().parent
+    default_path = package_dir / "exclusions.json"
+
+    exclusions = load_json(default_path)
+
+    # User-provided extra files (list of paths)
+    for path in extra_files or []:
+        user_excl = load_json(path)
+        exclusions.update(user_excl)
+
+    return exclusions
+
 exclusions = load_source_patterns()
+
 
 def remove_special_chars(s):
     s = html.unescape(s) 

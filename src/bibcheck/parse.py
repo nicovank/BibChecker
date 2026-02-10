@@ -1,80 +1,104 @@
 class patterns:
     acm_pattern_3 = r'''
-            ^(?P<authors>
-                .*?                  # anything up to the first ' and ' or ', and '
-                (?:[,]and )         # space-or-comma, then 'and', then space
-                [^,]+?                  # rest of the authors (can include periods for initials)
-                \b[A-Za-z]{2,}       # final word before separator: >= 2 letters (e.g. 'Bienz')
-            )
-            [\.]\s*                 # punctuation right after title
+        ^(?P<authors>
+            (?:\b[A-Z]\.|[^.\d])*?     # No periods unless they follow 1 capital letter (initial)            
+            ,\s*and\b\s*             # Must find `, and` before last author
+            (?:\b[A-Z]\.|[^.\d]+)*?
+        )
+        [\.]\s*                         # period after authors
             (?P<year>(19|20)\d{2})\b
-            [\.]\s*                 # consume the punctuation right after authors
-            (?P<title>
-                [^.]+?               # title: any chars except '.' (no periods allowed in title)
-            )
-            .*$
+        [\.]\s*                         # period after year
+        (?P<title>
+            (?:[^.?]|\.(?!\s))+
+        )
+        .*$
         '''
     acm_pattern_2 = r'''
-            ^(?P<authors>
-                .*?                  # anything up to the first ' and ' or ', and '
-                (?:and )         # space-or-comma, then 'and', then space
-                [^,]+?                  # rest of the authors (can include periods for initials)
-                \b[A-Za-z]{2,}       # final word before separator: >= 2 letters (e.g. 'Bienz')
+            ^
+            (?P<authors>
+                (?:
+                    \b[A-Z]\.                 # allowed initial
+                  | (?!\.) .                  # any char except a period
+                )*
+                \sand\s+(?=[A-Z])             # " and " must occur before first real period
+                (?:
+                    \b[A-Z]\.
+                  | (?!\.) .
+                )*
+                \b[A-Za-z]{2,}                # final author word
             )
-            [\.]\s*                 # punctuation right after title
-            (?P<year>(19|20)\d{2})\b
-            [\.]\s*                 # consume the punctuation right after authors
-            (?P<title>
-                [^.]+?               # title: any chars except '.' (no periods allowed in title)
-            )
+            \.\s*                             # FIRST real period — end of authors
+            (?P<year>(19|20)\d{2})
+            \.\s*
+            (?P<title>[^.]+)                  # title has NO periods
+            \.
             .*$
         '''
+    acm_pattern_et_al = r'''
+            ^(?P<authors>
+                (?:\b[A-Z]\.|[^.\d])*?     # same looseness as other patterns
+                \bet\s+al\s*\.?                 # literal "et al."
+            )
+            \s*
+            (?P<year>(19|20)\d{2})\b
+            [\.]\s*
+            (?P<title>
+                (?:[^.?]|\.(?!\s))+
+            )
+            .*$
+            '''    
+
     acm_pattern_1 = r'''
             ^
             (?P<authors>
-                (?:                             # consume chars that are NOT the boundary start
-                    (?!\b[A-Za-z]{2,}[\.,])     # don't step over a WORD{2,} + . or , boundary
-                    .                           # consume one char
+                (?:
+                    \b[A-Z]\.            # single-letter initial
+                  | [^.\d]               # anything else but period/digit
                 )*
-                \b[A-Za-z]{2,}                  # final word before separator: >= 2 letters
+                \b[A-Za-z]{2,}           # final author word (≥2 letters)
             )
-            (?=[\.])                           # next char must be . or ,
-            [\.,]\s*
-            (?P<year>(19|20)\d{2})\b
-            [\.]\s*                            # consume the punctuation
-            (?P<title>\s*
-                [^.]+?                          # title (no periods allowed)
-            )
+            \.\s*
+            (?P<year>(19|20)\d{2})
+            \.\s*
+            (?P<title>[^.]+)
+            \.
             .*$
         '''  
 
     siam_pattern_3 = r'''
             ^(?P<authors>
-                .*?                  # anything up to the first ' and ' or ', and '
-                (?:[,]and )         # space-or-comma, then 'and', then space
-                [^,]+?                  # rest of the authors (can include periods for initials)
-                \b[A-Za-z]{2,}       # final word before separator: >= 2 letters (e.g. 'Bienz')
+            (?:\b[A-Z]\.|[^.\d])*?     # No periods unless they follow 1 capital letter (initial)            
+            ,\s*and\b\s*             # Must find `, and` before last author
+            (?:\b[A-Z]\.|[^.\d]+)*?
             )
             [\.]\s*                 # consume the punctuation right after authors
-            (?P<title>
-                [^.]+?               # title: any chars except '.' (no periods allowed in title)
-            )
+            (?P<title>[^.]+)
             [\.]\s*                 # punctuation right after title
             (?P<year>(19|20)\d{2})\b
             .*$
         '''
     siam_pattern_2 = r'''
             ^(?P<authors>
-                .*?                  # anything up to the first ' and ' or ', and '
-                (?:and )         # space-or-comma, then 'and', then space
-                [^,]+?                  # rest of the authors (can include periods for initials)
-                \b[A-Za-z]{2,}       # final word before separator: >= 2 letters (e.g. 'Bienz')
+                (?:\b[A-Z]\.|[^.,\d])*?        # allow initials like "A." but otherwise no periods
+                \sand\s+(?=[A-Z])           # " and " only if next token looks like an author (capitalized)
+                (?:\b[A-Z]\.|[^.,\d])*?        # same restriction for the rest of the authors
+                \b[A-Za-z]{2,}              # final word in author list
             )
-            [\.]\s*                 # consume the punctuation right after authors
-            (?P<title>
-                [^.]+?               # title: any chars except '.' (no periods allowed in title)
+            [\.]\s*                         # period after authors
+            (?P<title>[^.]+)                # title up to next period (still forbids periods in title)
+            [\.]\s*                         # period after title
+            (?P<year>(19|20)\d{2})\b
+            .*$
+        '''
+    siam_pattern_et_al = r'''
+            ^
+            (?P<authors>
+                (?:\b[A-Z]\.|[^.\d])*?       # same looseness as other patterns
+                \bet\s+al\s*\.?                   # literal "et al."
             )
-            [\.]\s*                 # punctuation right after title
+            \s*
+            (?P<title>[^.]+)                # title up to next period
+            [\.]\s*
             (?P<year>(19|20)\d{2})\b
             .*$
         '''
@@ -89,59 +113,89 @@ class patterns:
             )
             (?=[\.,])                           # next char must be . or ,
             [\.]\s*                            # consume the punctuation
-            (?P<title>\s*
-                [^.]+?                          # title (no periods allowed)
-            )
+            (?P<title>[^.]+)
             [\.]\s*
             (?P<year>(19|20)\d{2})\b
             .*$
         '''  
 
-    ieee_pattern_3 = r'^(?P<authors>.*?)["“”](?P<title>.+?)["“”]'
-    ieee_pattern_2 = r'^(?P<authors>.*?)["“”](?P<title>.+?)["“”]'
-    ieee_pattern_1 = r'^(?P<authors>.*?)["“”](?P<title>.+?)["“”]'
+    springer_pattern = r'''
+            ^
+            (?P<authors>[^:\d]+?)          # authors cannot contain colon
+            \s*:\s*
+            (?P<title>.*?)
+            (?=                          # stop title right before...
+                \.\s*                    # 1) a period
+              | \s*\(                    # 2) an opening parenthesis
+              | \s+(?:19|20)\d{2}\b      # 3) a 4-digit year
+            )
+            .*$
+        '''
+    springer_pattern_3 = springer_pattern
+    springer_pattern_2 = springer_pattern
+    springer_pattern_et_al = springer_pattern
+    springer_pattern_1 = springer_pattern
+
+    ieee_pattern = r'^(?P<authors>.*?)\s*[\u201C\u201D"](?P<title>[^"\u201C\u201D]+)[\u201C\u201D"]'
+    ieee_pattern_3 = ieee_pattern
+    ieee_pattern_2 = ieee_pattern
+    ieee_pattern_et_al = ieee_pattern
+    ieee_pattern_1 = ieee_pattern
 
 
     gen_pattern_3 = r'''
-            ^(?P<authors>
-                .*?                  # anything up to the first ' and ' or ', and '
-                (?:[,]and )         # space-or-comma, then 'and', then space
-                [^,]+?                  # rest of the authors (can include periods for initials)
-                \b[A-Za-z]{2,}       # final word before separator: >= 2 letters (e.g. 'Bienz')
+        ^(?P<authors>
+            .*?,\s*and\s+.*?[A-Za-z]{2,}\.
             )
-            [\.,]\s*                 # consume the punctuation right after authors
+            \s+
             (?P<title>
-                [^.]+?               # title: any chars except '.' (no periods allowed in title)
+                [^.,]+
             )
+            [\.,]
             .*$
-        '''
+            '''
     gen_pattern_2 = r'''
             ^(?P<authors>
-                .*?                  # anything up to the first ' and ' or ', and '
-                (?:and )         # space-or-comma, then 'and', then space
-                [^,]+?                  # rest of the authors (can include periods for initials)
-                \b[A-Za-z]{2,}       # final word before separator: >= 2 letters (e.g. 'Bienz')
+                (?:
+                    \b[A-Z]\.                 # allowed initial
+                  | (?![.]) .                # any char except period or comma
+                )*
+                \sand\s+(?=[A-Z])             # " and " must occur before first real delimiter
+                (?:
+                    \b[A-Z]\.
+                  | (?![.]) .
+                )*
+                \b[A-Za-z]{2,}                # final author word
             )
-            [\.,]\s*                 # consume the punctuation right after authors
-            (?P<title>
-                [^.]+?               # title: any chars except '.' (no periods allowed in title)
-            )
+            [\.,]\s*                          # author–title separator: period OR comma
+            (?P<title>[^.,]+)                 # title has NO periods or commas
+            [\.,]
             .*$
         '''
-    gen_pattern1 = r'''
+    gen_pattern_et_al = r'''
+            ^
+            (?P<authors>
+                .*?\bet\s+al\s*\.?
+            )
+            \s+
+            (?P<title>
+                [^.,]+
+            )
+            [\.,]
+            .*$
+        '''
+    gen_pattern_1 = r'''
             ^
             (?P<authors>
                 (?:                             # consume chars that are NOT the boundary start
-                    (?!\b[A-Za-z]{2,}[\.,])     # don't step over a WORD{2,} + . or , boundary
+                    (?!\b[A-Za-z]{2,}[\.])     # don't step over a WORD{2,} + . or , boundary
                     .                           # consume one char
                 )*
                 \b[A-Za-z]{2,}                  # final word before separator: >= 2 letters
             )
             (?=[\.,])                           # next char must be . or ,
             [\.,]\s*                            # consume the punctuation
-            (?P<title>\s*
-                [^.]+?                          # title (no periods allowed)
-            )
+            (?P<title>[^.]+)
             .*$
         '''  
 

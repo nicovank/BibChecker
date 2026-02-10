@@ -19,6 +19,7 @@ dependencies = [
     "python-Levenshtein",
     "habanero",
     "arxiv",
+    "python-docx",
 ]
 
 [project.scripts]

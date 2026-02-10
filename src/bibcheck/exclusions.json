@@ -2,6 +2,7 @@
   "github.com": "GitHub Repository",
   "https://gitlab": "GitLab Repository",
   "docs.amd.com": "AMD Docs",
+  "amd.com": "AMD",
   "developer.nvidia.com": "NVIDIA Docs",
   ".pdf": "Included .pdf Link",
   "ofiwg.github.io": "Libfabric",
@@ -53,5 +54,14 @@
   "www.amd.com": "AMD",
   "riken.jp": "Riken",
   "cscs.ch": "CSCS",
-  "developer.arm.com": "ARM"
+  "developer.arm.com": "ARM",
+  "www.tomshardware.com": "Hardware Specs",
+  "chipsandcheese.com": "Chips and Cheese",
+  "opencompute.org": "OpenCompute",
+  "semianalysis.com": "SemiAnalysis",
+  "hpcwire.com": "HPC Wire",
+  "apple.com": "Apple",
+  "hackernoon.com": "Hackernoon",
+  "llvm.org": "LLVM",
+  "software.intel.com": "Intel Software"
 }

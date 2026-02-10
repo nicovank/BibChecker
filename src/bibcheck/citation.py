@@ -299,9 +299,9 @@ class Citation:
 
         if validation.wrong_doi:
             if self.doi:
-                write_output(f"DOI does NOT match! {self.doi}, {self.doi2}", doc, RED)
+                write_output(f"Title NOT found using DOI {self.doi} or {self.doi2}", doc, RED)
             elif self.arxiv_id:
-                write_output(f"ARXIV ID does NOT match! {self.arxiv_id}", doc, RED)
+                write_output(f"Title NOT found using ARXIV ID {self.arxiv_id}", doc, RED)
                 if validation.arxiv_version_count:
                     write_output(f"ArXIV Version Count is {validation.arxiv_version_count}, Manually compare against older versions!", doc, BLUE)
 

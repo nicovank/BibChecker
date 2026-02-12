@@ -34,14 +34,20 @@ FOUND AUTHORS: author0, author1, ...
 The file `exclusions.json` includes keywords/phrases that indicates a citation should be excluded from the search.  For instance, if a reference contains a Github link, it is excluded from the search, as publicly available APIs will not be able to find codebases.  You can add additional exclusions by creating your own JSON file and passing it to the bibliography checker with `--exclude-file <exclusionfile.json>`.
 
 ## Output
-The codebase will output citation validation information, including:
+The codebase will output citation validation information, including the following.  If titles or author lists to not match searched metadata exactly, the closest match is output, and differences between the two are highlighted in red or orange.
+
 - \# found exact title/author match
+
 - \# does not match expected <> format
+
 - \# excluded from search (exclusions.json match)
+
 - <Parsed citation> (unless matched exactly or excluded)
+
 - Title does not match searched metadata!
     GIVEN TITLE: ...
     FOUND TITLE: ...
+    
 - Authors do not match metadata for FOUND TITLE!
     GIVEN AUTHORS: ...
     FOUND AUTHORS: ...

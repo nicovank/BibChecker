@@ -20,7 +20,7 @@ After installing, you can check the accuracy of citations in a PDF through `bibc
 
 ## Limitations
 - Currently, this only validates against metadata stored in publicly available APIs (e.g. OpenAlex, arXiv, and similar).  It cannot currently validate codebases and websites.  Github and common HPC websites are listed in an exclusions file, and if these URLs are found within a citation, the given citation is not validated.  When this happens, you will see `# excluded from search (exclusions.json match)`.
-- Parsing citations with `PdfReader` and manual string comparisons is an error prone approach.  You may see parsings, particularly author names, that do not match the original citation.  When this happens, you can compare FOUND AUTHORS directly against the original citation, in the format should below.
+- Parsing citations with `PdfReader` and manual string comparisons is an error prone approach.  You may see parsings, particularly author names, that do not match the original citation.  When this happens, you can compare FOUND AUTHORS directly against the original citation, in the format should below.  If something looks odd, you may have run into a PDF that cannot be accurately parsed with PdfReader.  I have run this across a few hundred papers, and found one in which PdfReader output text with 0 spaces.
 ```
 <Original Citation, e.g. author0, author1. "Title". etc>
 
@@ -53,5 +53,8 @@ The codebase will output citation validation information, including the followin
     GIVEN AUTHORS: ...
     FOUND AUTHORS: ...
 
+## Please Provide Feedback
+Please reach out if you have any issues!  I am also happy to parse additional bibliography formats.
 
-*Acknowledgement: ChatGPT was used to generate string comparison patterns and API search URLs.*
+## Acknowledgement
+*ChatGPT was used to generate string comparison patterns and API search URLs.*

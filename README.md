@@ -27,7 +27,7 @@ The codebase will output citation validation information, including the followin
 
 - `# excluded from search (exclusions.json match)`
 
-- `<Parsed citation> (unless matched exactly or excluded)`
+- `<Parsed citation>` (unless matched exactly or excluded)
 
 - 
     ```

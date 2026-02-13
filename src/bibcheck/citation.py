@@ -213,14 +213,6 @@ class Citation:
             if self.authors == '--':
                 self.authors = prev_citation.authors
 
-            try:
-                year_match = regex.search(r'(?<![\d/])\b(19|20)\d{2}\b(?![\d/])', self.title, timeout = 0.1)
-            except TimeoutError:
-                year_match = None
-            if year_match:
-                year = year_match.group(0)
-                self.title = self.title.replace(year, '')
-
         self.norm_title = None
         self.norm_concat_title = None
         if self.title:

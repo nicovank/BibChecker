@@ -1,6 +1,7 @@
 __all__ = ["get_colors", "write_output", "write_multi_output"]
 
 from docx.shared import RGBColor
+import re
 
 
 RESET  = "\033[0m"
@@ -20,9 +21,22 @@ def get_colors(doc):
 
     return [RED, ORANGE, BLUE, GREEN, DIM]
 
+def clean_xml_text(text):
+    if not text:
+        return text
+
+    # Remove NULL bytes
+    text = text.replace('\x00', '')
+
+    # Remove all control chars except \t \n \r
+    text = re.sub(r'[\x01-\x08\x0B-\x0C\x0E-\x1F]', '', text)
+
+    return text
+
 def write_output(string, doc, color=None):
     if doc:
         p = doc.add_paragraph()
+        string = clean_xml_text(string)
         run = p.add_run(f"{string}")
         if color:
             run.font.color.rgb = color
@@ -35,9 +49,11 @@ def write_output(string, doc, color=None):
 def write_multi_output(header, header_color, colored_words, doc):
     if doc:
         p = doc.add_paragraph()
+        header = clean_xml_text(header)
         run = p.add_run(header)
         run.font.color.rgb = header_color
         for word, color in colored_words:
+            word = clean_xml_text(word)
             run = p.add_run(word)
             if color is not None:
                 run.font.color.rgb = color

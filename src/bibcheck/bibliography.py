@@ -21,8 +21,18 @@ class Bibliography:
         self.doc_path = bibcheck_dir / f"{pdf_stem}.docx"
 
         #Convert PDF to text
-        reader = PdfReader(pdf_path)
-        text = "\n".join(page.extract_text() or "" for page in reader.pages)
+        if args.siam:
+            import fitz
+            doc = fitz.open("PSWRSuperlinear.pdf")
+            text = ""
+            for page in doc:
+                text += page.get_text()
+            text = re.sub(r'^\s*\d+\s*$\n?', '', text, flags=re.MULTILINE)
+            text = re.sub(r'-\n', '-', text)
+        else:
+            reader = PdfReader(pdf_path)
+            text = "\n".join(page.extract_text() or "" for page in reader.pages)
+            
         text = re.sub(r'\s+\.', '.', text)
 
         # Find the last instance of 'bibliography' or 'references'
@@ -55,6 +65,17 @@ class Bibliography:
             bib_text = text[start:end]
         else:
             bib_text = text[start:]
+
+        LIGATURES = {
+            "\ufb00": "ff",
+            "\ufb01": "fi",
+            "\ufb02": "fl",
+            "\ufb03": "ffi",
+            "\ufb04": "ffl",
+        }
+
+        for lig, repl in LIGATURES.items():
+            bib_text = bib_text.replace(lig, repl)
 
         # Find each entry (beginning with [#]) and add to entries
         if args.springer:
@@ -96,7 +117,7 @@ class Bibliography:
         
         for entry in self.entries:
             entry.validate(doc)
-        #self.entries[2].validate(doc)
+        #self.entries[16].validate(doc)
 
         if doc:
             print("Saving to ", self.doc_path)

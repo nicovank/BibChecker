@@ -17,6 +17,20 @@ NAME_SUFFIXES = {
     "jr", "sr", "ii", "iii", "iv", "v", "vi"
 }
 
+SPACING_TO_COMBINING = {
+    "\u00A8": "\u0308",  # ¨  diaeresis
+    "\u00B4": "\u0301",  # ´  acute
+    "\u0060": "\u0300",  # `  grave
+    "\u02C6": "\u0302",  # ˆ  circumflex
+    "\u02DC": "\u0303",  # ˜  tilde
+    "\u02C7": "\u030C",  # ˇ  caron
+    "\u00AF": "\u0304",  # ¯  macron
+    "\u02D8": "\u0306",  # ˘  breve
+    "\u02D9": "\u0307",  # ˙  dot above
+    "\u02DA": "\u030A",  # ˚  ring above
+    "\u02DB": "\u0328",  # ˛  ogonek
+}
+
 def load_json(path):
     try:
         with open(path, "r", encoding="utf-8") as f:
@@ -45,6 +59,9 @@ def remove_special_chars(s):
     if not s:
         return
 
+    for spacing, combining in SPACING_TO_COMBINING.items():
+        s = s.replace(spacing, combining)
+
     s = html.unescape(s) 
     s = re.sub(r'<mml:[^>]+>', '', s)
     s = re.sub(r'</mml:[^>]+>', '', s)
@@ -53,7 +70,7 @@ def remove_special_chars(s):
     s = unicodedata.normalize('NFKD', s)
     s = ''.join(ch for ch in s if not unicodedata.combining(ch))
     s = re.sub(r'[\u2010-\u2015\u2212]', '-', s)    
-    s = re.sub(r'\b([A-Z][a-z]+)\s+([a-z])\b', r'\1\2', s)
+    #s = re.sub(r'\b([A-Z][a-z]+)\s+([a-z])\b', r'\1\2', s)
     
     return s
 

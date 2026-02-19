@@ -68,9 +68,9 @@ class patterns:
     siam_pattern_3 = r'''
             ^
             (?P<authors>
-                .+?                    # first authors
-                \s*,\s*and\s+          # require ", and" (whitespace flexible)
-                .+?                    # final author
+                (?:\s*[^\s,]+(?:\s+[^\s,]+){0,2}\s*,){2,}
+                \s*and\s+
+                [^\s,]+(?:\s+[^\s,]+){0,2}
             )
             \s*,\s*                    # comma after authors
             (?P<title>.+?)                   # title up to next comma
@@ -86,9 +86,9 @@ class patterns:
     siam_pattern_2 = r'''
             ^
             (?P<authors>
-                .+?                # first author
-                \s+and\s+          # require " and "
-                .+?                # second author
+                [^\s,]+(?:\s+[^\s,]+){0,2}
+                \s+and\s+
+                [^\s,]+(?:\s+[^\s,]+){0,2}
             )
             \s*,\s*                # comma after authors
             (?P<title>.+?)                   # title up to next comma
@@ -104,7 +104,8 @@ class patterns:
     siam_pattern_et_al = r'''
             ^
             (?P<authors>
-                .+?\bet\s+al\.?
+                [^\s,]+(?:\s+[^\s,]+){0,2}
+                \s+et\s+al\.?
             )
             \s*,\s*
             (?P<title>.+?)                   # title up to next comma

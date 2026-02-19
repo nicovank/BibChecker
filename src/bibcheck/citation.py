@@ -171,8 +171,6 @@ class Citation:
         if not m:
             try:
                 m = regex.search(patterns.ieee_pattern_3, entry, flags = re.DOTALL | re.VERBOSE, timeout = 0.1)
-                if m and "Bruneo" in entry:
-                    print("Matched ieee")
             except TimeoutError:
                 m = None
 
@@ -185,8 +183,6 @@ class Citation:
         if not m and " and " in entry:
             try:
                 m = regex.search(patterns.gen_pattern_2, entry, flags = re.DOTALL | re.VERBOSE, timeout = 0.1)
-                if m and "Bruneo" in entry:
-                    print("Matched gen 2")
             except TimeoutError:
                 m = None
 
@@ -220,7 +216,6 @@ class Citation:
         if self.title:
             self.norm_title = normalize_title(self.title)
             self.norm_concat_title = normalize_title_concat(self.title)
-
 
 
 

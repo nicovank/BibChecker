@@ -23,7 +23,7 @@ class Bibliography:
         #Convert PDF to text
         if args.siam:
             import fitz
-            doc = fitz.open("PSWRSuperlinear.pdf")
+            doc = fitz.open(pdf_path)
             text = ""
             for page in doc:
                 text += page.get_text()

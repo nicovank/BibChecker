@@ -5,6 +5,14 @@ def parse_crossref(citation, validation, results):
             return
 
         items = results.json().get("message", {}).get("items", [])
+        data = results.json()
+        message = data.get("message", {})
+
+        if "items" in message:
+            items = message.get("items", [])
+        else:
+            items = [message]
+
         for item in items:
             title = item.get("title", [""])[0]
             authors = item.get("author")
